@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="pane" prefHeight="1051.0" prefWidth="2254.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.alextim.SFI.frontend.view.dynamic.DynamicController">
+   <children>
+      <SplitPane dividerPositions="0.4" layoutX="229.0" layoutY="56.0" orientation="VERTICAL" prefHeight="404.0" prefWidth="2244.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <items>
+          <AnchorPane fx:id="graphPane" minHeight="0.0" minWidth="0.0" prefHeight="388.0" prefWidth="2252.0" />
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="644.0" prefWidth="2242.0">
+               <children>
+                  <TableView fx:id="paramTable" layoutX="97.0" layoutY="199.0" prefHeight="258.0" prefWidth="511.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+                    <columns>
+                      <TableColumn fx:id="paramId" prefWidth="150.0" text="Идентификатор" />
+                      <TableColumn fx:id="paramValue" prefWidth="100.0" text="Значение" />
+                        <TableColumn fx:id="paramComment" minWidth="2.0" prefWidth="250.0" text="Комментарий" />
+                    </columns>
+                  </TableView>
+                  <TableView fx:id="flagTable" layoutX="928.0" layoutY="-26.0" maxHeight="1.7976931348623157E308" prefHeight="616.0" prefWidth="539.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="550.0" AnchorPane.topAnchor="5.0">
+                    <columns>
+                      <TableColumn fx:id="flagId" prefWidth="150.0" text="Идентификатор" />
+                      <TableColumn fx:id="flagValue" prefWidth="100.0" text="Значение" />
+                        <TableColumn fx:id="flagComment" prefWidth="250.0" text="Комментарий" />
+                    </columns>
+                  </TableView>
+                  <VBox layoutX="1113.0" layoutY="55.0" prefHeight="258.0" prefWidth="110.0" spacing="10.0" AnchorPane.leftAnchor="1113.0" AnchorPane.topAnchor="5.0">
+                     <children>
+                        <Button fx:id="startBtn" layoutX="853.0" layoutY="39.0" mnemonicParsing="false" onAction="#startOn" prefHeight="25.0" prefWidth="110.0" text="Старт" />
+                        <Button fx:id="stopBtn" disable="true" layoutX="853.0" layoutY="79.0" mnemonicParsing="false" onAction="#stopOn" prefHeight="25.0" prefWidth="109.0" text="Стоп" />
+                        <Button mnemonicParsing="false" onAction="#exportOn" prefHeight="25.0" prefWidth="109.0" text="Экспорт..." />
+                        <Button mnemonicParsing="false" onAction="#clearOn" prefHeight="25.0" prefWidth="109.0" text="Очистить" />
+                     </children>
+                  </VBox>
+                  <Label fx:id="stat" layoutX="205.0" layoutY="359.0" prefHeight="17.0" prefWidth="207.0" text="-" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="280.0" />
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
+</AnchorPane>

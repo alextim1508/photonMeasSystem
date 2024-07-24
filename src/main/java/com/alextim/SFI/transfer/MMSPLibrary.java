@@ -2,9 +2,12 @@ package com.alextim.SFI.transfer;
 
 import com.alextim.SFI.transfer.Handles.*;
 import com.sun.jna.Library;
-import com.sun.jna.ptr.LongByReference;
+
+/*
+https://github.com/java-native-access/jna/blob/master/www/Mappings.md
 
 
+*/
 public interface MMSPLibrary extends Library {
 
     /* Инициализация RTL */
@@ -25,16 +28,16 @@ public interface MMSPLibrary extends Library {
     /* Комплексное конфигурирование устройства */
     int msp_Configure(
             DevHandle devHandle,        // устройство
-            int mode,                  // множество (битовая маска) включаемых режимов
-            LongByReference flags,      // список флажков, устанавливаемых в “1”. м.б. NULL
-            LongByReference regvalues   // regvalues – список числовых параметров и их значений, м.б. NULL
+            int mode,                   // множество (битовая маска) включаемых режимов
+            int[] flags,                // список флажков, устанавливаемых в “1”. м.б. NULL
+            int[] regvalues             // regvalues – список числовых параметров и их значений, м.б. NULL
     );
 
     /* Создает кадр на заданное число сообщений, исходно пустой */
     FrmHandle msp_CreateFrame(
-            DevHandle devHandle, // устройство
-            int FrameTime,      // длительность кадра в единицах по 100 мкс(?)
-            int MessageCount    // число сообщений в кадре
+            DevHandle devHandle,    // устройство
+            short frameTime,          // длительность кадра в единицах по 100 мкс
+            short msgCount            // число сообщений в кадре
     );
 
 
@@ -45,10 +48,10 @@ public interface MMSPLibrary extends Library {
             byte RT,                        // адрес (0-31)
             byte SA,                        // подадрес (0-31)
             byte RTR_MC,                    // адрес ОУ получателя для mspM_RTtoRT
-            int SAR_MCD,                   // код и данные для mspM_MODECODE_XXXX
+            short SAR_MCD,                  // код и данные для mspM_MODECODE_XXXX
             byte dataWordCount,             // число слов данных
-            short[] data,                    // данные. Может быть NULL, в этом случае поле buffer->data не инициализируется
-            long bccw                      // управляющее слово КШ (bitmapped). 3 мл. разряда игнорируются
+            short[] data,                   // данные. Может быть NULL, в этом случае поле buffer->data не инициализируется
+            int bccw                       // управляющее слово КШ (bitmapped). 3 мл. разряда игнорируются
     );
 
     // Создание сообщения в ОЗУ МСП
@@ -59,8 +62,8 @@ public interface MMSPLibrary extends Library {
 
     //Добавление сообщений в кадр
     int msp_AddMessage(
-            FrmHandle frame,   // кадр
-            MsgHandle message, // сообщение
+            FrmHandle frame,    // кадр
+            MsgHandle message,  // сообщение
             short msggap        // интервал между началом данного и началом следующего сообщения, мкс
     );
 
@@ -73,21 +76,21 @@ public interface MMSPLibrary extends Library {
 
     //Выдача команды. (Запись в командный регистр)
     int msp_Command(
-            DevHandle devHandle, // устройство
-            int command         // код команды
+            DevHandle devHandle,    // устройство
+            int command             // код команды
     );
 
     //Считывание сообщения из ОЗУ МСП в ОЗУ хоста, совместно со словами состояния из дескриптора сообщения в данном стеке/кадре
-    int msp_RetrieveMessage(StkHandle stkHandle,           // стек; допускается RT-стек, MT-стек или BC-фрейм
-                             int entry,                 // номер дескриптора сообщения в кадре
-                             Message.ByReference buffer // буфер для считывания сообщения. В буфере заполняются дополнительные поля StatusWord1/2, loopback, BSW, timetag.
+    int msp_RetrieveMessage(StkHandle stkHandle,       // стек; допускается RT-стек, MT-стек или BC-фрейм
+                            int entry,                 // номер дескриптора сообщения в кадре
+                            Message.ByReference buffer // буфер для считывания сообщения. В буфере заполняются дополнительные поля StatusWord1/2, loopback, BSW, timetag.
 
     );
 
     //Копирование слов данных сообщения из ОЗУ МСП
     int msp_ReadMessageData(MsgHandle message,
-                             short[] /*msp_WORD* */ buffer,  //буфер для приема слов данных;
-                             int wordcount //число слов, которые надо скопировать.
+                            short[] buffer, //буфер для приема слов данных;
+                            int wordcount   //число слов, которые надо скопировать.
     );
 
     //Этой функцией можно удалить любой объект из ОЗУ МСП

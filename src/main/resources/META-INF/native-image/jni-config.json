@@ -3,6 +3,20 @@
   "name":"[Lcom.sun.glass.ui.Screen;"
 },
 {
+  "name":"[Ljava.lang.String;"
+},
+{
+  "name":"com.sun.glass.ui.CommonDialogs",
+  "methods":[{"name":"createFileChooserResult","parameterTypes":["java.lang.String[]","com.sun.glass.ui.CommonDialogs$ExtensionFilter[]","int"] }]
+},
+{
+  "name":"com.sun.glass.ui.CommonDialogs$ExtensionFilter",
+  "methods":[
+    {"name":"extensionsToArray","parameterTypes":[] }, 
+    {"name":"getDescription","parameterTypes":[] }
+  ]
+},
+{
   "name":"com.sun.glass.ui.Cursor",
   "methods":[
     {"name":"getNativeCursor","parameterTypes":[] }, 
@@ -16,6 +30,56 @@
 {
   "name":"com.sun.glass.ui.Size",
   "methods":[{"name":"<init>","parameterTypes":["int","int"] }]
+},
+{
+  "name":"com.sun.javafx.font.directwrite.D2D1_COLOR_F",
+  "fields":[
+    {"name":"a"}, 
+    {"name":"b"}, 
+    {"name":"g"}, 
+    {"name":"r"}
+  ],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.javafx.font.directwrite.D2D1_MATRIX_3X2_F",
+  "fields":[
+    {"name":"_11"}, 
+    {"name":"_12"}, 
+    {"name":"_21"}, 
+    {"name":"_22"}, 
+    {"name":"_31"}, 
+    {"name":"_32"}
+  ],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.javafx.font.directwrite.D2D1_PIXEL_FORMAT",
+  "fields":[
+    {"name":"alphaMode"}, 
+    {"name":"format"}
+  ],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.javafx.font.directwrite.D2D1_POINT_2F",
+  "fields":[
+    {"name":"x"}, 
+    {"name":"y"}
+  ],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.javafx.font.directwrite.D2D1_RENDER_TARGET_PROPERTIES",
+  "fields":[
+    {"name":"dpiX"}, 
+    {"name":"dpiY"}, 
+    {"name":"minLevel"}, 
+    {"name":"pixelFormat"}, 
+    {"name":"type"}, 
+    {"name":"usage"}
+  ],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"com.sun.javafx.font.directwrite.DWRITE_GLYPH_METRICS",
@@ -45,6 +109,18 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"com.sun.javafx.font.directwrite.DWRITE_MATRIX",
+  "fields":[
+    {"name":"dx"}, 
+    {"name":"dy"}, 
+    {"name":"m11"}, 
+    {"name":"m12"}, 
+    {"name":"m21"}, 
+    {"name":"m22"}
+  ],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"com.sun.javafx.font.directwrite.RECT",
   "fields":[
     {"name":"bottom"}, 
@@ -53,6 +129,10 @@
     {"name":"top"}
   ],
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.javafx.geom.Path2D",
+  "methods":[{"name":"<init>","parameterTypes":["int","byte[]","int","float[]","int"] }]
 },
 {
   "name":"com.sun.jna.Callback"
@@ -241,7 +321,8 @@
     {"name":"<init>","parameterTypes":["byte[]","java.lang.String"] }, 
     {"name":"getBytes","parameterTypes":[] }, 
     {"name":"getBytes","parameterTypes":["java.lang.String"] }, 
-    {"name":"toCharArray","parameterTypes":[] }
+    {"name":"toCharArray","parameterTypes":[] }, 
+    {"name":"toLowerCase","parameterTypes":["java.util.Locale"] }
   ]
 },
 {
@@ -314,6 +395,20 @@
   "methods":[
     {"name":"array","parameterTypes":[] }, 
     {"name":"arrayOffset","parameterTypes":[] }
+  ]
+},
+{
+  "name":"java.util.ArrayList",
+  "methods":[
+    {"name":"<init>","parameterTypes":["int"] }, 
+    {"name":"add","parameterTypes":["java.lang.Object"] }
+  ]
+},
+{
+  "name":"java.util.HashMap",
+  "methods":[
+    {"name":"containsKey","parameterTypes":["java.lang.Object"] }, 
+    {"name":"put","parameterTypes":["java.lang.Object","java.lang.Object"] }
   ]
 }
 ]

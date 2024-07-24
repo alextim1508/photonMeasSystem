@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum BCCW {
-    CHANNEL_A(0x0080),
-    CHANNEL_B(0x0000);
+    CHANNEL_A((byte) 0x0080),
+    CHANNEL_B((byte) 0x0000);
 
-    public final int value;
+    public final byte value;
 }

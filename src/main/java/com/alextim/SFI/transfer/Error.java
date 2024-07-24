@@ -96,6 +96,9 @@ public enum Error {
     }
 
     public static Error getErrorByCode(int code) {
+        if(code == 0)
+            return msp_NOERROR;
+
         for(Error i: Error.values()) {
             if(code == i.code) {
                 return i;

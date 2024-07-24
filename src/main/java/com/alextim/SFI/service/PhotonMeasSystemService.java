@@ -1,88 +1,99 @@
 package com.alextim.SFI.service;
 
-import com.alextim.SFI.service.ExchangeChannelService.MKOMessage;
-import com.alextim.SFI.transfer.Message;
+import com.alextim.SFI.service.MkoService.MKOMessage;
+import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import static com.alextim.SFI.service.ExchangeChannelService.MKOBus.MKO_BUS_A;
-import static com.alextim.SFI.service.ExchangeChannelService.MKODirection.MKO_DIR_READ;
-import static com.alextim.SFI.service.ExchangeChannelService.MKODirection.MKO_DIR_WRITE;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
+
+import static com.alextim.SFI.frontend.view.param.ParamController.Setting;
+import static com.alextim.SFI.service.MkoService.MKOBus.MKO_BUS_A;
+import static com.alextim.SFI.service.MkoService.MKODirection.MKO_DIR_READ;
+import static com.alextim.SFI.service.MkoService.MKODirection.MKO_DIR_WRITE;
+import static com.alextim.SFI.service.PhotonMeasSystemService.Address.ADDR_MAIN_CHANNEL;
+import static com.alextim.SFI.service.PhotonMeasSystemService.CommandParams.*;
+import static com.alextim.SFI.service.PhotonMeasSystemService.SubAddress.SUB_ADDR_READ_MEAS_DATA;
+import static com.alextim.SFI.service.PhotonMeasSystemService.SubAddress.SUB_ADDR_SET_COMMAND;
 
 @Slf4j
 public class PhotonMeasSystemService {
 
-    private ExchangeChannelService exchangeChannelService;
+    private MkoService mkoService;
 
-    public static byte DEVICE = 0; // устройство МКО
-    public static byte da_MAIN_CHANNEL = 9; // адрес оконечного устройства (ОУ)
+    @AllArgsConstructor
+    public enum Address /*адрес оконечного устройства (ОУ)*/ {
+        ADDR_MAIN_CHANNEL((byte) 9);
 
-    public static  byte pa_MEAS_DATA = 1;  // подадрес
-    public static byte pa_TECHN_CMD = 4;
-
-    public static byte tc_OPEN_TRANSMITTER = 0x0002; // технологические команды
-    public static byte tc_CLOSE_TRANSMITTER = 0x0001;
-
-
-    public PhotonMeasSystemService(ExchangeChannelService exchangeChannelService) {
-        this.exchangeChannelService = exchangeChannelService;
-        exchangeChannelService.create();
+        public final byte addr;
     }
 
-    public MeasResult readMeasResults() {
+    @AllArgsConstructor
+    public enum SubAddress {
+        SUB_ADDR_READ_MEAS_DATA((byte) 1, "Передача результатов измерения"),
+        SUB_ADDR_SET_COMMAND((byte) 2, "Задание команды управления");
+
+        public final byte subAddr;
+        public final String title;
+    }
+
+    @AllArgsConstructor
+    public enum Commands {
+        SET_UP((short) 2, "Приведение СФИ в исходное положение", new ArrayList<>(), new ArrayList<>()),
+        SET_LENDING_TYPE((short) 3, "Тип приземления", List.of(LENDING_OK, LENDING_FAIL), new ArrayList<>()),
+        SET_STATE((short) 4, "Задание состояния ПУ и ЛТЭ", List.of(OPENING_PU_OK, OPENING_PU_FAIL), List.of(SHOOTING_LTE_OK, SHOOTING_LTE_FAIL)),
+        SET_FAIL_FLAG((short) 5, "Задание флагов отказа", new ArrayList<>(), new ArrayList<>());
+
+        public final short code;
+        public final String title;
+        public final List<CommandParams> params1;
+        public final List<CommandParams> params2;
+    }
+
+    @AllArgsConstructor
+    public enum CommandParams {
+        LENDING_OK((byte) 1, "Посадка на полигон"),
+        LENDING_FAIL((byte) 0, "Посадка аварийная за пределы полигона"),
+        OPENING_PU_OK((byte) 1, "Есть раскрытие ПУ"),
+        OPENING_PU_FAIL((byte) 0, "Нет раскрытия ПУ"),
+        SHOOTING_LTE_OK((byte) 1, "Есть отстрел ЛТЭ"),
+        SHOOTING_LTE_FAIL((byte) 0, "Нет отстрела ЛТЭ");
+
+        public final byte code;
+        public final String title;
+    }
+
+    public PhotonMeasSystemService(MkoService mkoService) {
+        this.mkoService = mkoService;
+    }
+
+    @SneakyThrows
+    public void readMeasResults(Setting setting, Consumer<short[]> consumer, AtomicBoolean isStop, long amount) {
         MKOMessage mkoMessage = new MKOMessage(
                 MKO_BUS_A,
                 MKO_DIR_READ,
-                da_MAIN_CHANNEL,
-                pa_MEAS_DATA,
-                new short[13]);
+                ADDR_MAIN_CHANNEL.addr,
+                SUB_ADDR_READ_MEAS_DATA.subAddr,
+                new short[32]);
 
-        exchangeChannelService.transfer(DEVICE, new Message.ByReference(), mkoMessage);
-
-        if (mkoMessage.getLastError() != 0)
-            throw new RuntimeException("1111");
-
-        MeasResult measResult = new MeasResult();
-
-        measResult.frequency1 = mkoMessage.words[0] + 0x10000 * mkoMessage.words[1];
-        measResult.frequency2 = mkoMessage.words[2] + 0x10000 * mkoMessage.words[3];
-        measResult.frequency3 = mkoMessage.words[4] + 0x10000 * mkoMessage.words[5];
-        measResult.frequency4 = mkoMessage.words[6] + 0x10000 * mkoMessage.words[7];
-        measResult.height = mkoMessage.words[8] + 0x10000 * mkoMessage.words[9];
-        measResult.status = MsgStatus.getByCode(mkoMessage.words[10] + 0x10000 * mkoMessage.words[11]);
-        measResult.packetID = mkoMessage.words[12];
-
-        return measResult;
+        mkoService.transfer(mkoMessage, setting, consumer, isStop, amount);
     }
 
-    public void openTransmitter() {
+    public void command(Setting setting, short command, short param) {
         MKOMessage mkoMessage = new MKOMessage(
                 MKO_BUS_A,
                 MKO_DIR_WRITE,
-                da_MAIN_CHANNEL,
-                pa_TECHN_CMD,
+                ADDR_MAIN_CHANNEL.addr,
+                SUB_ADDR_SET_COMMAND.subAddr,
                 new short[2]);
 
-        mkoMessage.words[0] = tc_OPEN_TRANSMITTER;
-        mkoMessage.words[1] = 0x0000;
+        mkoMessage.data[0] = command;
+        mkoMessage.data[1] = param;
 
-        exchangeChannelService.transfer(DEVICE, new Message.ByReference(), mkoMessage);
-        if (mkoMessage.getLastError() != 0)
-            throw new RuntimeException("1111");
-    }
-
-    public void closeTransmitter() {
-        MKOMessage mkoMessage = new MKOMessage(
-                MKO_BUS_A,
-                MKO_DIR_WRITE,
-                da_MAIN_CHANNEL,
-                pa_TECHN_CMD,
-                new short[2]);
-
-        mkoMessage.words[0] = tc_CLOSE_TRANSMITTER;
-        mkoMessage.words[1] = 0x0000;
-
-        exchangeChannelService.transfer(DEVICE, new Message.ByReference(), mkoMessage);
-        if (mkoMessage.getLastError() != 0)
-            throw new RuntimeException("1111");
+        mkoService.transfer(mkoMessage, setting, data -> {
+        }, new AtomicBoolean(false), 1);
     }
 }

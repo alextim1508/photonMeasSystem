@@ -3,7 +3,8 @@ package com.alextim.SFI.context;
 
 import com.alextim.SFI.RootController;
 import com.alextim.SFI.frontend.MainWindow;
-import com.alextim.SFI.service.ExchangeChannelService;
+import com.alextim.SFI.service.MkoService;
+import com.alextim.SFI.service.ExportService;
 import com.alextim.SFI.service.PhotonMeasSystemService;
 import com.alextim.SFI.transfer.MMSPTransfer;
 import com.alextim.SFI.transfer.MMSPLibrary;
@@ -22,23 +23,12 @@ public class Context {
     @Getter
     RootController rootController;
 
-    private static final String VERSION = "v1";
 
     private MMSPTransfer mmspTransfer;
     private PhotonMeasSystemService photonMeasSystemService;
+    private ExportService exportService;
 
     public Context(MainWindow mainWindow, String[] args) {
-        if (args != null) {
-            for (String arg : args) {
-                log.info("Arg command line: {}", arg);
-                if (arg.equalsIgnoreCase("expert")) {
-                    IS_EXPERT = true;
-                }
-            }
-        }
-
-        log.info(IS_EXPERT ? "It is expert!" : "It is not expert!");
-
         readAppProperty();
 
         createBeans(mainWindow);
@@ -66,7 +56,7 @@ public class Context {
     }
 
     private void appPropertiesInit(Properties properties) {
-        TITLE_APP = (String) properties.get("app.title") + VERSION;
+        TITLE_APP = (String) properties.get("app.title");
         log.info("TITLE_APP: {}", TITLE_APP);
     }
 
@@ -83,29 +73,20 @@ public class Context {
     }
 
     private void createRepositories() {
-
     }
 
     private void createServices() {
-        ExchangeChannelService channelService = new ExchangeChannelService(mmspTransfer);
+        MkoService channelService = new MkoService(mmspTransfer);
 
         photonMeasSystemService = new PhotonMeasSystemService(channelService);
+
+        exportService = new ExportService();
     }
 
     private void createRootController(MainWindow mainWindow) {
         log.info("Creating root controller");
-
-        rootController = new RootController(mainWindow, photonMeasSystemService);
+        rootController = new RootController(mainWindow, photonMeasSystemService, exportService);
     }
 
-
     public static String TITLE_APP;
-    public static Boolean IS_EXPERT = false;
-    public static String DATE_TIME_FORMAT_WITH_MILLI_SECONDS = "yyyy-MM-dd HH:mm:ss:SSS";
-    public static String DATE_TIME_FORMAT_WITH_SECONDS = "yyyy-MM-dd HH:mm:ss";
-    public static String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm";
-    public static String DATE_FORMAT = "yyyy-MM-dd";
-    public static String DATE_FORMAT_WITH_FIRST_DAYS = "dd.MM.yy";
-
-    public static String CHECK_MARK = "✔";
 }

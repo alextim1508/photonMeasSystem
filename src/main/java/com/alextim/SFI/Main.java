@@ -25,33 +25,53 @@ public class Main extends Application {
         System.setProperty("file.encoding", "UTF-8");
 
         MainWindow mainWindow = new MainWindow(stage);
-        Thread.setDefaultUncaughtExceptionHandler(mainWindow::showError);
 
-        Context context = new Context(mainWindow, args);
+        StartController startController = showStartWindow(stage);
 
-        RootController rootController = context.getRootController();
+        Thread thread = new Thread(() -> {
+            RootController rootController = null;
+            try {
+                rootController = new Context(mainWindow, args).getRootController();
+            } catch (Exception e) {
+                Platform.runLater(() ->{
+                    startController.setHeader("Ошибка инициализации");
+                    startController.addLog(e.getMessage());
+                });
+            }
 
-        loadEntities(rootController, mainWindow);
+            if (rootController == null)
+                return;
 
-        initStage(stage,
-                mainWindow.createMainWindow(rootController),
-                mainWindow.getIconImage(),
-                rootController);
+            RootController finalRootController = rootController;
+            Platform.runLater(() -> {
+                initStage(stage,
+                        mainWindow.createMainWindow(finalRootController),
+                        mainWindow.getIconImage(),
+                        finalRootController);
+            });
+        });
+        thread.setDaemon(true);
+        thread.start();
+    }
+
+    private static StartController showStartWindow(Stage stage) {
+        StartController startController = new StartController();
+        stage.setScene(new Scene(startController.getStartPane("Инициализация")));
+        stage.show();
+        return startController;
     }
 
     private void initStage(Stage stage,
                            AnchorPane rootPane,
                            Image icon,
                            RootController rootController) {
-
+        stage.hide();
         stage.setScene(new Scene(rootPane));
         stage.setTitle(Context.TITLE_APP);
         stage.getIcons().add(icon);
 
         stage.setOnShowing(event -> {
             log.info("showing callback");
-            rootController.connect();
-            rootController.startListenTransferQueue();
         });
 
         stage.setOnCloseRequest(handler -> {
@@ -65,18 +85,5 @@ public class Main extends Application {
         });
         stage.setMaximized(true);
         stage.show();
-    }
-
-    private void loadEntities(RootController rootController,
-                              MainWindow mainWindow) {
-
-        Thread thread = new Thread(rootController::loadEntities);
-        thread.setUncaughtExceptionHandler((t, e) -> {
-            Platform.runLater(() -> {
-                mainWindow.showError(t, e);
-            });
-        });
-        thread.setDaemon(true);
-        thread.start();
     }
 }
