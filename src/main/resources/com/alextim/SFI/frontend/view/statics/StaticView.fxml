@@ -20,8 +20,8 @@
       <HBox layoutX="29.0" layoutY="121.0" spacing="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="121.0" />
       <HBox layoutX="20.0" layoutY="208.0" prefHeight="25.0" prefWidth="578.0" spacing="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="208.0">
          <children>
-            <Label layoutX="10.0" layoutY="104.0" prefHeight="25.0" prefWidth="248.0" text="Текущее измерение (высота / ID / частоты )" />
-            <TextField fx:id="currentMeas" editable="false" layoutX="153.0" layoutY="100.0" prefHeight="25.0" prefWidth="321.0" />
+            <Label layoutX="10.0" layoutY="104.0" prefHeight="25.0" prefWidth="264.0" text="Текущее измерение (высота / ID / частоты ) :" />
+            <TextField fx:id="currentMeas" editable="false" layoutX="153.0" layoutY="100.0" prefHeight="25.0" prefWidth="276.0" />
          </children>
       </HBox>
       <AnchorPane layoutX="20.0" layoutY="270.0" prefHeight="80.0" prefWidth="578.0" style="-fx-border-color: black;" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="270.0">

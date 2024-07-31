@@ -204,10 +204,7 @@ public class StaticController extends NodeController {
                     }, new AtomicBoolean(false), 1);
 
                     if (count == measTime) {
-                        Platform.runLater(() -> {
-                            addTableRow(statMeasResult);
-                            disableBtn(false);
-                        });
+                        Platform.runLater(() -> addTableRow(statMeasResult));
                         log.info("========== startOn === OK ==========");
                     } else {
                         futureTask = rootController.getScheduledExecutorService().schedule(this, 1, TimeUnit.SECONDS);
