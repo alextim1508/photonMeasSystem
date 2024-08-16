@@ -10,7 +10,7 @@
    <children>
       <TableView fx:id="table" layoutX="29.0" layoutY="362.0" prefHeight="251.0" prefWidth="1029.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="370.0">
         <columns>
-            <TableColumn fx:id="refHeightColumn" prefWidth="100.0" text="Высота (см)" />
+            <TableColumn fx:id="refHeightColumn" prefWidth="100.0" text="Высота (См)" />
             <TableColumn fx:id="channel1Column" prefWidth="150.0" text="Канал 1 (Гц)" />
             <TableColumn fx:id="channel2Column" prefWidth="150.0" text="Канал 2 (Гц)" />
             <TableColumn fx:id="channel3Column" prefWidth="150.0" text="Канал 3 (Гц)" />

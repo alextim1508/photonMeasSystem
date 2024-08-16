@@ -16,6 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static com.alextim.SFI.service.PhotonMeasSystemService.TechnologyCommands.CLOSE_TRANSMITTER;
+import static com.alextim.SFI.service.PhotonMeasSystemService.TechnologyCommands.OPEN_TRANSMITTER;
+
 @Slf4j
 public class ManagementController extends NodeController {
 
@@ -54,7 +57,7 @@ public class ManagementController extends NodeController {
                         ap.title.equals(string)).findFirst().orElse(null);
             }
         });
-        command.getSelectionModel().selectFirst();
+        command.getSelectionModel().select(0);
 
         param1.setConverter(new StringConverter<>() {
             @Override
@@ -128,5 +131,27 @@ public class ManagementController extends NodeController {
         setCommandData(String.format("Команда: %d, параметр: %d", value.code, param));
 
         rootController.getPhotonMeasSystemService().command(setting, value.code, param);
+    }
+
+    @FXML
+    void openOn(ActionEvent event) {
+        log.info("Sending open transmitter command");
+
+        Setting setting = ((ParamController) rootController.getChild(ParamController.class.getSimpleName())).getSetting();
+        log.info("Setting: {}", setting);
+
+        setCommandData(String.format("Команда: %d",  OPEN_TRANSMITTER.code));
+        rootController.getPhotonMeasSystemService().sendTechnologyCommand(setting, OPEN_TRANSMITTER.code, (short) 0);
+    }
+
+    @FXML
+    void closeOn(ActionEvent event) {
+        log.info("Sending close transmitter command");
+
+        Setting setting = ((ParamController) rootController.getChild(ParamController.class.getSimpleName())).getSetting();
+        log.info("Setting: {}", setting);
+
+        setCommandData(String.format("Команда: %d",  CLOSE_TRANSMITTER.code));
+        rootController.getPhotonMeasSystemService().sendTechnologyCommand(setting, CLOSE_TRANSMITTER.code, (short) 0);
     }
 }

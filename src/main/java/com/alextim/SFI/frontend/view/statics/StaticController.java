@@ -23,13 +23,14 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static com.alextim.SFI.frontend.MainWindow.PROGRESS_BAR_COLOR;
-import static com.alextim.SFI.frontend.view.param.ParamController.*;
+import static com.alextim.SFI.frontend.view.param.ParamController.Setting;
 import static com.alextim.SFI.service.Converter.convert;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 @Slf4j
 public class StaticController extends NodeController {
@@ -205,17 +206,19 @@ public class StaticController extends NodeController {
 
                     if (count == measTime) {
                         Platform.runLater(() -> addTableRow(statMeasResult));
+                        disableBtn(false);
                         log.info("========== startOn === OK ==========");
                     } else {
-                        futureTask = rootController.getScheduledExecutorService().schedule(this, 1, TimeUnit.SECONDS);
+                        futureTask = rootController.getScheduledExecutorService().schedule(this, 1, SECONDS);
                     }
                 } catch (Exception e) {
                     log.error("", e);
                     Platform.runLater(() -> mainWindow.showError(Thread.currentThread(), e));
+                    disableBtn(false);
                 }
             }
         };
-        rootController.getScheduledExecutorService().schedule(task, 0, TimeUnit.MILLISECONDS);
+        rootController.getScheduledExecutorService().schedule(task, 0, MILLISECONDS);
     }
 
     private void addTableRow(StatMeasResult statMeasResult) {

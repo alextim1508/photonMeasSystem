@@ -16,8 +16,7 @@ import static com.alextim.SFI.service.MkoService.MKODirection.MKO_DIR_READ;
 import static com.alextim.SFI.service.MkoService.MKODirection.MKO_DIR_WRITE;
 import static com.alextim.SFI.service.PhotonMeasSystemService.Address.ADDR_MAIN_CHANNEL;
 import static com.alextim.SFI.service.PhotonMeasSystemService.CommandParams.*;
-import static com.alextim.SFI.service.PhotonMeasSystemService.SubAddress.SUB_ADDR_READ_MEAS_DATA;
-import static com.alextim.SFI.service.PhotonMeasSystemService.SubAddress.SUB_ADDR_SET_COMMAND;
+import static com.alextim.SFI.service.PhotonMeasSystemService.SubAddress.*;
 
 @Slf4j
 public class PhotonMeasSystemService {
@@ -25,7 +24,7 @@ public class PhotonMeasSystemService {
     private MkoService mkoService;
 
     @AllArgsConstructor
-    public enum Address /*адрес оконечного устройства (ОУ)*/ {
+    public enum Address {
         ADDR_MAIN_CHANNEL((byte) 9);
 
         public final byte addr;
@@ -34,9 +33,18 @@ public class PhotonMeasSystemService {
     @AllArgsConstructor
     public enum SubAddress {
         SUB_ADDR_READ_MEAS_DATA((byte) 1, "Передача результатов измерения"),
-        SUB_ADDR_SET_COMMAND((byte) 2, "Задание команды управления");
+        SUB_ADDR_SET_COMMAND((byte) 2, "Задание команды управления"),
+        SUB_ADDR_SET_TECHNOLOGY_COMMAND((byte) 4, "Задание технологической команды");
 
         public final byte subAddr;
+        public final String title;
+    }
+
+    @AllArgsConstructor
+    public enum TechnologyCommands {
+        CLOSE_TRANSMITTER((short) 1, "Закрыть передатчик"),
+        OPEN_TRANSMITTER((short) 2, "Открыть передатчик");
+        public final short code;
         public final String title;
     }
 
@@ -80,6 +88,21 @@ public class PhotonMeasSystemService {
                 new short[32]);
 
         mkoService.transfer(mkoMessage, setting, consumer, isStop, amount);
+    }
+
+    public void sendTechnologyCommand(Setting setting, short command, short param) {
+        MKOMessage mkoMessage = new MKOMessage(
+                MKO_BUS_A,
+                MKO_DIR_WRITE,
+                ADDR_MAIN_CHANNEL.addr,
+                SUB_ADDR_SET_TECHNOLOGY_COMMAND.subAddr,
+                new short[2]);
+
+        mkoMessage.data[0] = command;
+        mkoMessage.data[1] = param;
+
+        mkoService.transfer(mkoMessage, setting, data -> {
+        }, new AtomicBoolean(false), 1);
     }
 
     public void command(Setting setting, short command, short param) {

@@ -20,7 +20,7 @@ public class MeasResult {
     public long frequency3;
     public long frequency4;
     public long height;
-    public long packetID;
+    public int packetID;
     public long statusValue;
     public Map<MsgStatus, Boolean> status;
     public final long timestamp;

@@ -36,7 +36,7 @@
                         <Button mnemonicParsing="false" onAction="#clearOn" prefHeight="25.0" prefWidth="109.0" text="Очистить" />
                      </children>
                   </VBox>
-                  <Label fx:id="stat" layoutX="205.0" layoutY="359.0" prefHeight="17.0" prefWidth="207.0" text="-" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="280.0" />
+                  <Label fx:id="stat" layoutX="205.0" layoutY="359.0" prefHeight="17.0" prefWidth="511.0" text="-" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="280.0" />
                </children>
             </AnchorPane>
         </items>

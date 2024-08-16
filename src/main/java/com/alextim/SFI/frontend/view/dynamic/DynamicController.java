@@ -74,7 +74,7 @@ public class DynamicController extends NodeController {
     private Label stat;
 
     @FXML
-    private Button startBtn , stopBtn;
+    private Button startBtn, stopBtn;
 
 
     @Override
@@ -312,23 +312,26 @@ public class DynamicController extends NodeController {
 
     public String getFailsInfo() {
         List<Long> sortedTimestamps = measResults.keySet().stream().sorted().toList();
-
-        long fails = 0;
-        for (int j = 0; j < sortedTimestamps.size() - 1; j++) {
-            Long cur = measResults.get(sortedTimestamps.get(j)).packetID;
-            Long next = measResults.get(sortedTimestamps.get(j + 1)).packetID;
-
-            if (Math.abs(cur - next) != 1)
-                fails++;
-        }
-        long packetID1 = 0;
-        long packetID2 = 0;
         if (!sortedTimestamps.isEmpty()) {
-            packetID1 = measResults.get(sortedTimestamps.get(0)).packetID;
-            packetID2 = measResults.get(sortedTimestamps.get(sortedTimestamps.size() - 1)).packetID;
-        }
 
-        return String.format("Потеряно сообщений: %d из %d", fails, (packetID2 - packetID1));
+            long fails = 0;
+            for (int j = 0; j < sortedTimestamps.size() - 1; j++) {
+                int cur = measResults.get(sortedTimestamps.get(j)).packetID;
+                int next = measResults.get(sortedTimestamps.get(j + 1)).packetID;
+
+                fails += next - cur - 1;
+            }
+
+            int firstPacketID = measResults.get(sortedTimestamps.get(0)).packetID;
+            int lastPacketID = measResults.get(sortedTimestamps.get(sortedTimestamps.size() - 1)).packetID;
+
+            return String.format("Потеряно сообщений: %d из %d", fails,
+                    firstPacketID <= lastPacketID ?
+                            lastPacketID - firstPacketID + 1 :
+                            lastPacketID + 2 * Short.MAX_VALUE - firstPacketID + 1
+            );
+        }
+        return "";
     }
 
 

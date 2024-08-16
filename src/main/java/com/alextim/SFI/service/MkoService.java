@@ -1,7 +1,6 @@
 package com.alextim.SFI.service;
 
 
-import com.alextim.SFI.frontend.view.param.ParamController;
 import com.alextim.SFI.transfer.Error;
 import com.alextim.SFI.transfer.Handles.DevHandle;
 import com.alextim.SFI.transfer.Handles.FrmHandle;
@@ -10,7 +9,6 @@ import com.alextim.SFI.transfer.MMSPTransfer;
 import com.alextim.SFI.transfer.Message;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -18,7 +16,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
-import static com.alextim.SFI.frontend.view.param.ParamController.*;
+import static com.alextim.SFI.frontend.view.param.ParamController.Setting;
 import static com.alextim.SFI.transfer.Area.AUTO_REPEAT;
 import static com.alextim.SFI.transfer.BCCW.CHANNEL_A;
 import static com.alextim.SFI.transfer.BCCW.CHANNEL_B;
@@ -68,8 +66,9 @@ public class MkoService {
             throw new RuntimeException("startup: " + err);
         }
 
+        DevHandle devHandle = null;
         try {
-            DevHandle devHandle = service.open(0);
+            devHandle = service.open(0);
             if (devHandle == null) {
                 log.error("open er: devHandle == null");
                 throw new RuntimeException("open err: devHandle == null");
@@ -132,7 +131,7 @@ public class MkoService {
 
 
             short[] data = new short[32];
-            for (long i = 0; i <= amount && !isStop.get(); i++) {
+            for (long i = 0; i < amount && !isStop.get(); i++) {
                 err = service.retrieveMessage(frameHandle, 0, formatMessage);
                 if (err != msp_NOERROR) {
                     log.error("retrieveMessage: {}", err);
@@ -151,19 +150,19 @@ public class MkoService {
                 }
             }
 
-            err = service.reset(devHandle);
-            if (err != msp_NOERROR) {
-                log.error("reset: {}", err);
-                throw new RuntimeException("reset " + err);
-            }
-
-            err = service.close(devHandle);
-            if (err != msp_NOERROR) {
-                log.error("close: {}", err);
-                throw new RuntimeException("close " + err);
-            }
-
         } finally {
+            if(devHandle != null) {
+                err = service.reset(devHandle);
+                if (err != msp_NOERROR) {
+                    log.error("reset: {}", err);
+                }
+
+                err = service.close(devHandle);
+                if (err != msp_NOERROR) {
+                    log.error("close: {}", err);
+                }
+            }
+
             err = service.cleanup();
             if (err != msp_NOERROR) {
                 log.error("cleanup: {}", err);
