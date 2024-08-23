@@ -11,6 +11,7 @@ import com.alextim.SFI.frontend.view.param.ParamView;
 import com.alextim.SFI.frontend.view.statics.StaticController.StatMeasResult;
 import com.alextim.SFI.frontend.view.statics.StaticController.StaticParam;
 import com.alextim.SFI.frontend.view.statics.StaticView;
+import com.alextim.SFI.frontend.view.work.WorkView;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Alert;
@@ -86,6 +87,7 @@ public class MainWindow {
         TabPane tabPane = new TabPane(
                 new Tab("Динамика", new DynamicView().getView(bundle)),
                 new Tab("Статика", new StaticView().getView(bundle)),
+                new Tab("Работа", new WorkView().getView(bundle)),
                 new Tab("Контроль", new ManagementView().getView(bundle)),
                 new Tab("Параметры", new ParamView().getView(bundle))
         );

@@ -35,17 +35,6 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 @Slf4j
 public class StaticController extends NodeController {
 
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class StatMeasResult {
-        public long refHeight;
-        public double frequency1;
-        public double frequency2;
-        public double frequency3;
-        public double frequency4;
-        public boolean isBackground;
-    }
-
     @FXML
     private TextField serialNumber, machineNumber;
     @FXML
@@ -83,6 +72,18 @@ public class StaticController extends NodeController {
 
     private StaticParam staticParam = new StaticParam();
 
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class StatMeasResult {
+        public long refHeight;
+        public double frequency1;
+        public double frequency2;
+        public double frequency3;
+        public double frequency4;
+        public boolean isBackground;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         super.initialize(location, resources);
@@ -92,6 +93,11 @@ public class StaticController extends NodeController {
         tableInitialize();
 
         readStaticParamFromFile();
+    }
+
+    @Override
+    protected String getName() {
+        return getClass().getSimpleName();
     }
 
     private void tableInitialize() {
@@ -473,11 +479,6 @@ public class StaticController extends NodeController {
                         "Измерения экспортированы в файлы");
             });
         });
-    }
-
-    @Override
-    protected String getName() {
-        return getClass().getSimpleName();
     }
 
     private int getRefHeight() {

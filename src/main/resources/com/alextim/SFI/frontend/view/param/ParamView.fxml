@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
@@ -8,29 +9,30 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.alextim.SFI.frontend.view.param.ParamController">
    <children>
-      <HBox layoutX="30.0" layoutY="39.0" spacing="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="60.0">
+      <GridPane hgap="5.0" layoutX="62.0" layoutY="210.0" prefHeight="152.0" prefWidth="363.0" style="-fx-border-color: black;" vgap="5.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+         </rowConstraints>
          <children>
-            <Label layoutX="30.0" layoutY="43.0" prefHeight="25.0" prefWidth="162.0" text="Длительность фрейма МКО:" />
-            <TextField fx:id="frameTime" layoutX="197.0" layoutY="39.0" prefWidth="100.0" />
+            <TextField fx:id="delayLoop" layoutX="306.0" layoutY="312.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="frameTime" layoutX="281.0" layoutY="263.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label layoutX="62.0" layoutY="344.0" prefHeight="27.0" prefWidth="220.0" text="Размер буфера отображаемых данных:" GridPane.rowIndex="3" />
+            <Label layoutX="96.0" layoutY="312.0" prefHeight="24.0" prefWidth="185.0" text="Задержка цикла отпроса МКО:" GridPane.rowIndex="2" />
+            <Label layoutX="65.0" layoutY="210.0" prefHeight="25.0" prefWidth="181.0" text="Адрес оконечного устройства:" />
+            <TextField fx:id="fronBufferSize" layoutX="331.0" layoutY="359.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label layoutX="93.0" layoutY="261.0" prefHeight="25.0" prefWidth="162.0" text="Длительность фрейма МКО:" GridPane.rowIndex="1" />
+            <TextField fx:id="addrMainChannel" layoutX="295.0" layoutY="210.0" prefWidth="100.0" GridPane.columnIndex="1" />
          </children>
-      </HBox>
-      <HBox layoutX="38.0" layoutY="86.0" spacing="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="100.0">
-         <children>
-            <Label layoutX="38.0" layoutY="86.0" prefHeight="24.0" prefWidth="185.0" text="Задержка цикла отпроса МКО:" />
-            <TextField fx:id="delayLoop" layoutX="272.0" layoutY="91.0" prefWidth="100.0" />
-         </children>
-      </HBox>
-      <HBox layoutX="38.0" layoutY="139.0" spacing="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="140.0">
-         <children>
-            <Label layoutX="38.0" layoutY="143.0" prefHeight="27.0" prefWidth="220.0" text="Размер буфера отображаемых данных:" />
-            <TextField fx:id="fronBufferSize" layoutX="300.0" layoutY="139.0" prefWidth="100.0" />
-         </children>
-      </HBox>
-      <HBox layoutX="43.0" layoutY="211.0" spacing="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
-         <children>
-            <Label layoutX="30.0" layoutY="43.0" prefHeight="25.0" prefWidth="181.0" text="Адрес оконечного устройства:" />
-            <TextField fx:id="addrMainChannel" layoutX="197.0" layoutY="39.0" prefWidth="100.0" />
-         </children>
-      </HBox>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </GridPane>
    </children>
 </AnchorPane>

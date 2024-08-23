@@ -12,6 +12,8 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static com.alextim.SFI.context.Context.IS_EXPERT;
+
 @Slf4j
 public class ParamController extends NodeController {
 
@@ -40,6 +42,13 @@ public class ParamController extends NodeController {
         super.initialize(location, resources);
 
         readSettingsFromFile();
+
+        if(!IS_EXPERT) {
+            addrMainChannel.setEditable(false);
+            delayLoop.setEditable(false);
+            frameTime.setEditable(false);
+            fronBufferSize.setEditable(false);
+        }
     }
 
     private void readSettingsFromFile() {

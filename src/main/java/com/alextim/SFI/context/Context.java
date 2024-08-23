@@ -29,9 +29,25 @@ public class Context {
     private ExportService exportService;
 
     public Context(MainWindow mainWindow, String[] args) {
+        handleCommandArgs(args);
+
         readAppProperty();
 
         createBeans(mainWindow);
+    }
+
+    void handleCommandArgs(String[] args) {
+        IS_EXPERT = false;
+
+        if (args != null) {
+            for (String arg : args) {
+                log.info("Arg command line: {}", arg);
+                if (arg.equalsIgnoreCase("expert")) {
+                    IS_EXPERT = true;
+                }
+            }
+        }
+        log.info(IS_EXPERT ? "It is expert!" : "It is not expert!");
     }
 
     @SneakyThrows
@@ -89,4 +105,5 @@ public class Context {
     }
 
     public static String TITLE_APP;
+    public static Boolean IS_EXPERT;
 }

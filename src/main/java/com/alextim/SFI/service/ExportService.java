@@ -124,7 +124,7 @@ public class ExportService {
 
             if (!next.isBackground) {
                 fileWriter.append("//-------------").append(String.valueOf(next.refHeight)).append("-mm------------------").append(System.lineSeparator());
-                fileWriter.append("#define HP_").append(String.valueOf(i)).append("\t").append(String.valueOf(next.refHeight)).append(System.lineSeparator());
+                fileWriter.append("#define HP_").append(String.valueOf(i)).append("\t").append(String.valueOf(10 * next.refHeight)).append(System.lineSeparator());
                 fileWriter.append("#define HP_").append(String.valueOf(i)).append("_F1\t").append(String.valueOf((long) next.frequency1)).append(System.lineSeparator());
                 fileWriter.append("#define HP_").append(String.valueOf(i)).append("_F2\t").append(String.valueOf((long) next.frequency2)).append(System.lineSeparator());
                 fileWriter.append("#define HP_").append(String.valueOf(i)).append("_F3\t").append(String.valueOf((long) next.frequency3)).append(System.lineSeparator());
