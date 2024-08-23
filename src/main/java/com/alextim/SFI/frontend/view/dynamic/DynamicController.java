@@ -212,7 +212,8 @@ public class DynamicController extends NodeController {
                 }
                 simpleGraph.setAutoNotification(true);
 
-                refreshTableRows(lastRes);
+                if (lastRes != null)
+                    refreshTableRows(lastRes);
             }
         }
     }
@@ -311,6 +312,8 @@ public class DynamicController extends NodeController {
     }
 
     public String getFailsInfo() {
+        int MAX_VALUE = 2 * Short.MAX_VALUE + 1;
+
         List<Long> sortedTimestamps = measResults.keySet().stream().sorted().toList();
         if (!sortedTimestamps.isEmpty()) {
 
@@ -319,7 +322,18 @@ public class DynamicController extends NodeController {
                 int cur = measResults.get(sortedTimestamps.get(j)).packetID;
                 int next = measResults.get(sortedTimestamps.get(j + 1)).packetID;
 
-                fails += next - cur - 1;
+                int delta;
+                if (cur < next) {
+                    delta = next - cur - 1;
+                } else if (cur == next) {
+                    delta = 0;
+                    log.warn("index cur: {}, {} {}", j, cur, next);
+                } else {
+                    delta = next + MAX_VALUE - cur;
+                    log.warn("cur index: {}, {} {}, delta: {}", j, cur, next, delta);
+                }
+
+                fails += delta;
             }
 
             int firstPacketID = measResults.get(sortedTimestamps.get(0)).packetID;
@@ -328,7 +342,7 @@ public class DynamicController extends NodeController {
             return String.format("Потеряно сообщений: %d из %d", fails,
                     firstPacketID <= lastPacketID ?
                             lastPacketID - firstPacketID + 1 :
-                            lastPacketID + 2 * Short.MAX_VALUE - firstPacketID + 1
+                            lastPacketID + MAX_VALUE - firstPacketID + 1
             );
         }
         return "";

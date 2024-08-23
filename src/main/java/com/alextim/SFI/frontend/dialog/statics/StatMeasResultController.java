@@ -36,7 +36,7 @@ public class StatMeasResultController {
             double frequency2 = Double.parseDouble(this.frequency2.getText());
             double frequency3 = Double.parseDouble(this.frequency3.getText());
             double frequency4 = Double.parseDouble(this.frequency4.getText());
-            return new StatMeasResult(refHeight, frequency1, frequency2, frequency3, frequency4);
+            return new StatMeasResult(refHeight, frequency1, frequency2, frequency3, frequency4, false);
         } else {
             statMeasResult.refHeight = Long.parseLong(this.refHeight.getText());
             statMeasResult.frequency1 = Double.parseDouble(this.frequency1.getText());

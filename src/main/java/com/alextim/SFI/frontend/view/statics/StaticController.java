@@ -43,6 +43,7 @@ public class StaticController extends NodeController {
         public double frequency2;
         public double frequency3;
         public double frequency4;
+        public boolean isBackground;
     }
 
     @FXML
@@ -74,9 +75,13 @@ public class StaticController extends NodeController {
     private TableColumn<StatMeasResult, Double> channel3Column;
     @FXML
     private TableColumn<StatMeasResult, Double> channel4Column;
+    @FXML
+    private TableColumn<StatMeasResult, Boolean> isBackground;
 
     @FXML
-    private Button startBtn , stopBtn;
+    private Button startBtn, stopBtn;
+
+    private StaticParam staticParam = new StaticParam();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -85,6 +90,8 @@ public class StaticController extends NodeController {
         progressBar.setStyle("-fx-accent: " + PROGRESS_BAR_COLOR);
 
         tableInitialize();
+
+        readStaticParamFromFile();
     }
 
     private void tableInitialize() {
@@ -95,17 +102,105 @@ public class StaticController extends NodeController {
         channel1Column.setCellValueFactory(param -> {
             return new ReadOnlyObjectWrapper<>(param.getValue().frequency1);
         });
+        channel1Column.setCellFactory(new Callback<>() {
+            @Override
+            public TableCell<StatMeasResult, Double> call(TableColumn<StatMeasResult, Double> column) {
+                return new TableCell<>() {
+                    @Override
+                    protected void updateItem(Double item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item == null || empty) {
+                            setText(null);
+                        } else {
+                            setText(String.format("%.1f", item));
+                        }
+                    }
+                };
+            }
+        });
+
         channel2Column.setCellValueFactory(param -> {
             return new ReadOnlyObjectWrapper<>(param.getValue().frequency2);
         });
+        channel2Column.setCellFactory(new Callback<>() {
+            @Override
+            public TableCell<StatMeasResult, Double> call(TableColumn<StatMeasResult, Double> column) {
+                return new TableCell<>() {
+                    @Override
+                    protected void updateItem(Double item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item == null || empty) {
+                            setText(null);
+                        } else {
+                            setText(String.format("%.1f", item));
+                        }
+                    }
+                };
+            }
+        });
+
         channel3Column.setCellValueFactory(param -> {
             return new ReadOnlyObjectWrapper<>(param.getValue().frequency3);
         });
+        channel3Column.setCellFactory(new Callback<>() {
+            @Override
+            public TableCell<StatMeasResult, Double> call(TableColumn<StatMeasResult, Double> column) {
+                return new TableCell<>() {
+                    @Override
+                    protected void updateItem(Double item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item == null || empty) {
+                            setText(null);
+                        } else {
+                            setText(String.format("%.1f", item));
+                        }
+                    }
+                };
+            }
+        });
+
         channel4Column.setCellValueFactory(param -> {
             return new ReadOnlyObjectWrapper<>(param.getValue().frequency4);
         });
+        channel4Column.setCellFactory(new Callback<>() {
+            @Override
+            public TableCell<StatMeasResult, Double> call(TableColumn<StatMeasResult, Double> column) {
+                return new TableCell<>() {
+                    @Override
+                    protected void updateItem(Double item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item == null || empty) {
+                            setText(null);
+                        } else {
+                            setText(String.format("%.1f", item));
+                        }
+                    }
+                };
+            }
+        });
+
+        isBackground.setCellValueFactory(param -> {
+            return new ReadOnlyObjectWrapper<>(param.getValue().isBackground);
+        });
+        isBackground.setCellFactory(new Callback<>() {
+            @Override
+            public TableCell<StatMeasResult, Boolean> call(TableColumn<StatMeasResult, Boolean> column) {
+                return new TableCell<>() {
+                    @Override
+                    protected void updateItem(Boolean item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item == null || empty) {
+                            setText(null);
+                        } else {
+                            setText(item ? "Да" : "");
+                        }
+                    }
+                };
+            }
+        });
 
         ContextMenu contextMenu = createContextMenu();
+
         Callback<TableView<StatMeasResult>, TableRow<StatMeasResult>> callback = param -> {
             TableRow<StatMeasResult> tableRow = new TableRow<>();
             tableRow.setContextMenu(contextMenu);
@@ -118,10 +213,13 @@ public class StaticController extends NodeController {
     private ContextMenu createContextMenu() {
         MenuItem updateMenuItem = new MenuItem("Редактировать");
         updateMenuItem.setOnAction(event -> updateRowOn());
+        MenuItem saveBackgroundMenuItem = new MenuItem("Назначить фоном");
+        saveBackgroundMenuItem.setOnAction(event -> setBackgroundOn());
         MenuItem deleteMenuItem = new MenuItem("Удалить");
         deleteMenuItem.setOnAction(event -> deleteRowOn());
         ContextMenu contextMenu = new ContextMenu();
         contextMenu.getItems().addAll(
+                saveBackgroundMenuItem,
                 updateMenuItem,
                 deleteMenuItem);
         return contextMenu;
@@ -134,6 +232,28 @@ public class StaticController extends NodeController {
             table.refresh();
         }
     }
+
+    private void setBackgroundOn() {
+        table.getItems().forEach(item -> item.isBackground = false);
+
+        StatMeasResult statMeas = table.getSelectionModel().getSelectedItem();
+        statMeas.isBackground = true;
+
+        staticParam.prm1ch1MaxFon = (long) (1.2 * statMeas.frequency1);
+        staticParam.prm1ch1MinFon = (long) (0.8 * statMeas.frequency1);
+
+        staticParam.prm1ch2MaxFon = (long) (1.2 * statMeas.frequency2);
+        staticParam.prm1ch2MinFon = (long) (0.8 * statMeas.frequency2);
+
+        staticParam.prm2ch1MaxFon = (long) (1.2 * statMeas.frequency3);
+        staticParam.prm2ch1MinFon = (long) (0.8 * statMeas.frequency3);
+
+        staticParam.prm2ch2MaxFon = (long) (1.2 * statMeas.frequency4);
+        staticParam.prm2ch2MinFon = (long) (0.8 * statMeas.frequency4);
+
+        table.refresh();
+    }
+
 
     private void deleteRowOn() {
         ObservableList<StatMeasResult> selectedItems = table.getSelectionModel().getSelectedItems();
@@ -157,8 +277,8 @@ public class StaticController extends NodeController {
         } catch (Exception e) {
             mainWindow.showDialog(Alert.AlertType.ERROR,
                     "Ошибка",
-                    "Ошибка парсинга поля",
-                    "Ошибка парсинга поля Время измерения");
+                    "Ошибка разбора поля",
+                    "Ошибка преобразования строки из поля Время измерения в число ");
             return;
         }
 
@@ -169,8 +289,8 @@ public class StaticController extends NodeController {
         } catch (Exception e) {
             mainWindow.showDialog(Alert.AlertType.ERROR,
                     "Ошибка",
-                    "Ошибка парсинга поля",
-                    "Ошибка парсинга поля Высота");
+                    "Ошибка разбора поля",
+                    "Ошибка преобразования строки из поля Высота в число");
             return;
         }
 
@@ -248,7 +368,7 @@ public class StaticController extends NodeController {
     void stopOn(ActionEvent event) {
         disableBtn(false);
 
-        if(futureTask != null) {
+        if (futureTask != null) {
             futureTask.cancel(false);
             setProgress(0);
             setCurrentMeas("");
@@ -261,6 +381,8 @@ public class StaticController extends NodeController {
     }
 
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     @ToString
     public static class StaticParam {
         public long prm1ch1Max, prm1ch1MaxFon, prm1ch1MinFon;
@@ -269,15 +391,10 @@ public class StaticController extends NodeController {
         public long prm2ch2Max, prm2ch2MaxFon, prm2ch2MinFon;
     }
 
-    private void exportMeasurements() {
-        ObservableList<StatMeasResult> measResults = table.getItems();
-        if (measResults.isEmpty())
-            return;
-
-        StaticParam staticParam = null;
+    private void readStaticParamFromFile() {
         File staticParamFile = new File(System.getProperty("user.dir") + "/LastStaticParam.txt");
 
-        if(staticParamFile.exists()) {
+        if (staticParamFile.exists()) {
             try {
                 staticParam = rootController.getExportService().importStaticParamFromFile(staticParamFile);
             } catch (Exception e) {
@@ -285,21 +402,47 @@ public class StaticController extends NodeController {
             }
         }
         log.info("staticParam from file: {}", staticParam);
+    }
 
-        StaticParam newStaticParam = mainWindow.showStaticParamDialog(staticParam);
-        if (newStaticParam == null)
-            return;
+    private void saveStaticParamToFile() {
+        File staticParamFile = new File(System.getProperty("user.dir") + "/LastStaticParam.txt");
 
         try {
-            rootController.getExportService().exportToFile(newStaticParam, staticParamFile);
-        }catch (Exception e) {
+            rootController.getExportService().exportToFile(staticParam, staticParamFile);
+        } catch (Exception e) {
             log.error("", e);
         }
+    }
+
+    private void initStaticParamByMeasResultMax() {
+        table.getItems().forEach(item -> {
+            if(!item.isBackground) {
+                if(staticParam.prm1ch1Max > item.frequency1)
+                    staticParam.prm1ch1Max = (long) item.frequency1;
+                if(staticParam.prm1ch2Max > item.frequency2)
+                    staticParam.prm1ch2Max = (long) item.frequency2;
+                if(staticParam.prm2ch1Max > item.frequency3)
+                    staticParam.prm2ch1Max = (long) item.frequency3;
+                if(staticParam.prm2ch2Max > item.frequency4)
+                    staticParam.prm2ch2Max = (long) item.frequency4;
+            }
+        });
+    }
+
+    private void exportMeasurements() {
+        ObservableList<StatMeasResult> measResults = table.getItems();
+        if (measResults.isEmpty())
+            return;
+
+        initStaticParamByMeasResultMax();
+
+        staticParam = mainWindow.showStaticParamDialog(staticParam);
+
+        saveStaticParamToFile();
 
         File file = mainWindow.showFileChooseDialog();
         if (file == null)
             return;
-
 
         DoubleProperty progressProperty = new SimpleDoubleProperty(0.0);
         StringProperty statusProperty = new SimpleStringProperty("");
@@ -309,11 +452,16 @@ public class StaticController extends NodeController {
         rootController.getExecutorService().submit(() -> {
             log.info("export to selected file {}", file);
 
-            rootController.getExportService().exportToFile(measResults, newStaticParam, serialNumber.getText(), machineNumber.getText(), file, (n, progress) ->
-                    Platform.runLater(() -> {
-                        progressProperty.set(progress);
-                        statusProperty.set("Экспорт измерения " + n);
-                    })
+            rootController.getExportService().exportToFile(measResults,
+                    staticParam,
+                    serialNumber.getText(),
+                    machineNumber.getText(),
+                    file,
+                    (n, progress) ->
+                            Platform.runLater(() -> {
+                                progressProperty.set(progress);
+                                statusProperty.set("Экспорт измерения " + n);
+                            })
             );
 
             Platform.runLater(() -> {

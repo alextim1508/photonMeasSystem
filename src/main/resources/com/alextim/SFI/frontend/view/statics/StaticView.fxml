@@ -15,6 +15,7 @@
             <TableColumn fx:id="channel2Column" prefWidth="150.0" text="Канал 2 (Гц)" />
             <TableColumn fx:id="channel3Column" prefWidth="150.0" text="Канал 3 (Гц)" />
           <TableColumn fx:id="channel4Column" prefWidth="150.0" text="Канал 4 (Гц)" />
+            <TableColumn fx:id="isBackground" prefWidth="75.0" text="Фон" />
         </columns>
       </TableView>
       <HBox layoutX="29.0" layoutY="121.0" spacing="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="121.0" />

@@ -60,15 +60,22 @@ public class MkoService {
     public void transfer(MKOMessage message, Setting setting, Consumer<short[]> consumer, AtomicBoolean isStop, long amount) {
         log.info("Start transfer");
 
-        Error err = service.startup();
-        if (err != msp_NOERROR) {
-            log.error("startup: {}", err);
-            throw new RuntimeException("startup: " + err);
-        }
-
         DevHandle devHandle = null;
+        Error err;
+
         try {
-            devHandle = service.open(0);
+            err = service.startup();
+            if (err != msp_NOERROR) {
+                log.error("startup: {}", err);
+                throw new RuntimeException("startup: " + err);
+            }
+
+            int numberOfDevices = service.getNumberOfDevices();
+            if (numberOfDevices == -1) {
+                throw new RuntimeException("numberOfDevices == -1");
+            }
+
+            devHandle = service.open(numberOfDevices - 1);
             if (devHandle == null) {
                 log.error("open er: devHandle == null");
                 throw new RuntimeException("open err: devHandle == null");
@@ -138,20 +145,20 @@ public class MkoService {
                     throw new RuntimeException("retrieveMessage " + err);
                 }
 
-                if (formatMessage.type == 2 && formatMessage.bsw == 16400) {
-                    service.readMessageData(msgHandle, data);
-                    consumer.accept(data);
-                }
+                service.readMessageData(msgHandle, data);
+                consumer.accept(data);
 
-                try {
-                    Thread.sleep(setting.delayLoop);
-                } catch (Exception e) {
-                    log.error("", e);
+                if (setting.delayLoop != 0) {
+                    try {
+                        Thread.sleep(setting.delayLoop);
+                    } catch (Exception e) {
+                        log.error("", e);
+                    }
                 }
             }
 
         } finally {
-            if(devHandle != null) {
+            if (devHandle != null) {
                 err = service.reset(devHandle);
                 if (err != msp_NOERROR) {
                     log.error("reset: {}", err);

@@ -116,18 +116,29 @@ public class ExportService {
 
         Iterator<StatMeasResult> iterator = result.iterator();
 
-        for (int i = 0; iterator.hasNext(); i++) {
+        int i;
+        for (i = 0; iterator.hasNext(); i++) {
             progress.accept(i + 1, 1.0 * (i + 1) / result.size());
 
             StatMeasResult next = iterator.next();
 
-            fileWriter.append("//-------------").append(String.valueOf(next.refHeight)).append("-mm------------------").append(System.lineSeparator());
-            fileWriter.append("#define HP_").append(String.valueOf(i)).append("\t").append(String.valueOf(next.refHeight)).append(System.lineSeparator());
-            fileWriter.append("#define HP_").append(String.valueOf(i)).append("_F1\t").append(String.valueOf((long) next.frequency1)).append(System.lineSeparator());
-            fileWriter.append("#define HP_").append(String.valueOf(i)).append("_F2\t").append(String.valueOf((long) next.frequency2)).append(System.lineSeparator());
-            fileWriter.append("#define HP_").append(String.valueOf(i)).append("_F3\t").append(String.valueOf((long) next.frequency3)).append(System.lineSeparator());
-            fileWriter.append("#define HP_").append(String.valueOf(i)).append("_F4\t").append(String.valueOf((long) next.frequency4)).append(System.lineSeparator());
+            if (!next.isBackground) {
+                fileWriter.append("//-------------").append(String.valueOf(next.refHeight)).append("-mm------------------").append(System.lineSeparator());
+                fileWriter.append("#define HP_").append(String.valueOf(i)).append("\t").append(String.valueOf(next.refHeight)).append(System.lineSeparator());
+                fileWriter.append("#define HP_").append(String.valueOf(i)).append("_F1\t").append(String.valueOf((long) next.frequency1)).append(System.lineSeparator());
+                fileWriter.append("#define HP_").append(String.valueOf(i)).append("_F2\t").append(String.valueOf((long) next.frequency2)).append(System.lineSeparator());
+                fileWriter.append("#define HP_").append(String.valueOf(i)).append("_F3\t").append(String.valueOf((long) next.frequency3)).append(System.lineSeparator());
+                fileWriter.append("#define HP_").append(String.valueOf(i)).append("_F4\t").append(String.valueOf((long) next.frequency4)).append(System.lineSeparator());
+            }
         }
+
+        fileWriter.append("//-------------End-mark------------------").append(System.lineSeparator());
+        fileWriter.append("#define HP_").append(String.valueOf(i)).append("\t").append("000").append(System.lineSeparator());
+        fileWriter.append("#define HP_").append(String.valueOf(i)).append("_F1\t").append("0").append(System.lineSeparator());
+        fileWriter.append("#define HP_").append(String.valueOf(i)).append("_F2\t").append("0").append(System.lineSeparator());
+        fileWriter.append("#define HP_").append(String.valueOf(i)).append("_F3\t").append("0").append(System.lineSeparator());
+        fileWriter.append("#define HP_").append(String.valueOf(i)).append("_F4\t").append("0").append(System.lineSeparator());
+
 
         fileWriter.flush();
 
@@ -220,9 +231,10 @@ public class ExportService {
         @Cleanup
         FileWriter fileWriter = new FileWriter(file);
 
-        fileWriter.append(Long.toString(setting.frameTime)).append(System.lineSeparator());
-        fileWriter.append(Long.toString(setting.delayLoop)).append(System.lineSeparator());
-        fileWriter.append(Long.toString(setting.fronBufferSize)).append(System.lineSeparator());
+        fileWriter.append(Byte.toString(setting.addrMainChannel)).append(System.lineSeparator());
+        fileWriter.append(Integer.toString(setting.frameTime)).append(System.lineSeparator());
+        fileWriter.append(Integer.toString(setting.delayLoop)).append(System.lineSeparator());
+        fileWriter.append(Integer.toString(setting.fronBufferSize)).append(System.lineSeparator());
 
         fileWriter.append(System.lineSeparator());
         fileWriter.flush();
@@ -235,10 +247,11 @@ public class ExportService {
         @Cleanup
         BufferedReader br = new BufferedReader(new FileReader(file));
 
+        byte addMainChannel = Byte.parseByte(br.readLine());
         int frameTime = Integer.parseInt(br.readLine());
         int delayLoop = Integer.parseInt(br.readLine());
         int fronBufferSize = Integer.parseInt(br.readLine());
 
-        return new Setting(delayLoop, frameTime, fronBufferSize);
+        return new Setting(addMainChannel, delayLoop, frameTime, fronBufferSize);
     }
 }

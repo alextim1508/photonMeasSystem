@@ -35,6 +35,11 @@ public class MMSPTransfer {
         return library.msp_Open(devIndex);
     }
 
+    public int getNumberOfDevices() {
+        return library.msp_GetNumberOfDevices();
+    }
+
+
     public Error close(DevHandle devhandle) {
         int err = library.msp_Close(devhandle);
         return Error.getErrorByCode(err);

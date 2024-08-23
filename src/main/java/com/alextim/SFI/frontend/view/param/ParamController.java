@@ -21,14 +21,15 @@ public class ParamController extends NodeController {
     }
 
     @FXML
+    private TextField addrMainChannel;
+    @FXML
     private TextField delayLoop;
-
     @FXML
     private TextField frameTime;
-
     @FXML
     private TextField fronBufferSize;
 
+    private final int DEFAULT_ADD_MAIN_CHANEL = 9;
     private final int DEFAULT_FRAME_TIME = 5;
     private final int DEFAULT_DELAY_LOOP = 10;
     private final int DEFAULT_FRON_BUF_SIZE = 5;
@@ -66,6 +67,14 @@ public class ParamController extends NodeController {
         }
     }
 
+    public void setAddrMainChannel(byte arrMainChannel) {
+        this.addrMainChannel.setText(Byte.toString(arrMainChannel));
+    }
+
+    public byte getAddrMainChannel() {
+        return Byte.parseByte(addrMainChannel.getText());
+    }
+
     public void setFrameTime(int frameTime) {
         this.frameTime.setText(Integer.toString(frameTime));
     }
@@ -93,12 +102,20 @@ public class ParamController extends NodeController {
     @AllArgsConstructor
     @ToString
     public static class Setting {
+        public byte addrMainChannel;
         public int delayLoop;
         public int frameTime;
         public int fronBufferSize;
     }
 
     public Setting getSetting() {
+        byte arrMainChannel;
+        try {
+            arrMainChannel = getAddrMainChannel();
+        } catch (Exception e) {
+            arrMainChannel = DEFAULT_ADD_MAIN_CHANEL;
+        }
+
         int frameTime;
         try {
             frameTime = getFrameTime();
@@ -120,10 +137,11 @@ public class ParamController extends NodeController {
             fronBufferSize = DEFAULT_FRON_BUF_SIZE;
         }
 
-        return new Setting(delayLoop, frameTime, fronBufferSize);
+        return new Setting(arrMainChannel, delayLoop, frameTime, fronBufferSize);
     }
 
     public void setSettings(Setting settings) {
+        setAddrMainChannel(settings.addrMainChannel);
         setDelayLoop(settings.delayLoop);
         setFrameTime(settings.frameTime);
         setFronBufferSize(settings.fronBufferSize);

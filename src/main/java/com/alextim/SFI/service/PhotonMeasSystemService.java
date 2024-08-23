@@ -14,7 +14,6 @@ import static com.alextim.SFI.frontend.view.param.ParamController.Setting;
 import static com.alextim.SFI.service.MkoService.MKOBus.MKO_BUS_A;
 import static com.alextim.SFI.service.MkoService.MKODirection.MKO_DIR_READ;
 import static com.alextim.SFI.service.MkoService.MKODirection.MKO_DIR_WRITE;
-import static com.alextim.SFI.service.PhotonMeasSystemService.Address.ADDR_MAIN_CHANNEL;
 import static com.alextim.SFI.service.PhotonMeasSystemService.CommandParams.*;
 import static com.alextim.SFI.service.PhotonMeasSystemService.SubAddress.*;
 
@@ -23,12 +22,6 @@ public class PhotonMeasSystemService {
 
     private MkoService mkoService;
 
-    @AllArgsConstructor
-    public enum Address {
-        ADDR_MAIN_CHANNEL((byte) 9);
-
-        public final byte addr;
-    }
 
     @AllArgsConstructor
     public enum SubAddress {
@@ -83,7 +76,7 @@ public class PhotonMeasSystemService {
         MKOMessage mkoMessage = new MKOMessage(
                 MKO_BUS_A,
                 MKO_DIR_READ,
-                ADDR_MAIN_CHANNEL.addr,
+                setting.addrMainChannel,
                 SUB_ADDR_READ_MEAS_DATA.subAddr,
                 new short[32]);
 
@@ -94,7 +87,7 @@ public class PhotonMeasSystemService {
         MKOMessage mkoMessage = new MKOMessage(
                 MKO_BUS_A,
                 MKO_DIR_WRITE,
-                ADDR_MAIN_CHANNEL.addr,
+                setting.addrMainChannel,
                 SUB_ADDR_SET_TECHNOLOGY_COMMAND.subAddr,
                 new short[2]);
 
@@ -109,7 +102,7 @@ public class PhotonMeasSystemService {
         MKOMessage mkoMessage = new MKOMessage(
                 MKO_BUS_A,
                 MKO_DIR_WRITE,
-                ADDR_MAIN_CHANNEL.addr,
+                setting.addrMainChannel,
                 SUB_ADDR_SET_COMMAND.subAddr,
                 new short[2]);
 
