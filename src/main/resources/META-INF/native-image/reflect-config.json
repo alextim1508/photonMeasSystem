@@ -79,7 +79,14 @@
 },
 {
   "name":"com.alextim.SFI.frontend.dialog.AbstractDialogController",
-  "allDeclaredFields":true
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"com.alextim.SFI.frontend.dialog.error.ErrorController",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"com.alextim.SFI.frontend.dialog.progress.ProgressController",
@@ -141,6 +148,15 @@
     {"name":"exportOn","parameterTypes":["javafx.event.ActionEvent"] }, 
     {"name":"startOn","parameterTypes":["javafx.event.ActionEvent"] }, 
     {"name":"stopOn","parameterTypes":["javafx.event.ActionEvent"] }
+  ]
+},
+{
+  "name":"com.alextim.SFI.frontend.view.work.WorkController",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
+    {"name":"startOn","parameterTypes":["javafx.event.ActionEvent"] }
   ]
 },
 {
@@ -433,6 +449,12 @@
   "name":"javafx.fxml.FXMLLoader"
 },
 {
+  "name":"javafx.geometry.Insets",
+  "queryAllPublicMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["double","double","double","double"] }]
+},
+{
   "name":"javafx.geometry.Orientation",
   "methods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
 },
@@ -511,6 +533,7 @@
   "queryAllDeclaredMethods":true,
   "methods":[
     {"name":"setAlignment","parameterTypes":["javafx.geometry.Pos"] }, 
+    {"name":"setFont","parameterTypes":["javafx.scene.text.Font"] }, 
     {"name":"setMnemonicParsing","parameterTypes":["boolean"] }, 
     {"name":"setText","parameterTypes":["java.lang.String"] }
   ]
@@ -562,6 +585,12 @@
     {"name":"<init>","parameterTypes":[] }, 
     {"name":"getColumns","parameterTypes":[] }
   ]
+},
+{
+  "name":"javafx.scene.control.TextArea",
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"javafx.scene.control.TextField",
@@ -626,7 +655,9 @@
     {"name":"getRowConstraints","parameterTypes":[] }, 
     {"name":"getRowIndex","parameterTypes":["javafx.scene.Node"] }, 
     {"name":"setColumnIndex","parameterTypes":["javafx.scene.Node","java.lang.Integer"] }, 
-    {"name":"setRowIndex","parameterTypes":["javafx.scene.Node","java.lang.Integer"] }
+    {"name":"setHgap","parameterTypes":["double"] }, 
+    {"name":"setRowIndex","parameterTypes":["javafx.scene.Node","java.lang.Integer"] }, 
+    {"name":"setVgap","parameterTypes":["double"] }
   ]
 },
 {
@@ -656,6 +687,7 @@
     {"name":"setMaxHeight","parameterTypes":["double"] }, 
     {"name":"setMinHeight","parameterTypes":["double"] }, 
     {"name":"setMinWidth","parameterTypes":["double"] }, 
+    {"name":"setPadding","parameterTypes":["javafx.geometry.Insets"] }, 
     {"name":"setPrefHeight","parameterTypes":["double"] }, 
     {"name":"setPrefWidth","parameterTypes":["double"] }
   ]

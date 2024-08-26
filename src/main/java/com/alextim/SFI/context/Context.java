@@ -37,16 +37,19 @@ public class Context {
     }
 
     void handleCommandArgs(String[] args) {
-        IS_EXPERT = false;
+//        IS_EXPERT = false;
+//
+//        if (args != null) {
+//            for (String arg : args) {
+//                log.info("Arg command line: {}", arg);
+//                if (arg.equalsIgnoreCase("expert")) {
+//                    IS_EXPERT = true;
+//                }
+//            }
+//        }
 
-        if (args != null) {
-            for (String arg : args) {
-                log.info("Arg command line: {}", arg);
-                if (arg.equalsIgnoreCase("expert")) {
-                    IS_EXPERT = true;
-                }
-            }
-        }
+        IS_EXPERT = true;
+
         log.info(IS_EXPERT ? "It is expert!" : "It is not expert!");
     }
 

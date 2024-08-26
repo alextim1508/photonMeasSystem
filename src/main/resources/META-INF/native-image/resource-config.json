@@ -26,6 +26,9 @@
       "pattern":"\\Qapplication.properties\\E"
     }, 
     {
+      "pattern":"\\Qcom/alextim/SFI/frontend/dialog/error/newError.fxml\\E"
+    }, 
+    {
       "pattern":"\\Qcom/alextim/SFI/frontend/dialog/progress/progress.fxml\\E"
     }, 
     {
@@ -48,6 +51,9 @@
     }, 
     {
       "pattern":"\\Qcom/alextim/SFI/frontend/view/statics/StaticView.fxml\\E"
+    }, 
+    {
+      "pattern":"\\Qcom/alextim/SFI/frontend/view/work/WorkView.fxml\\E"
     }, 
     {
       "pattern":"\\Qcom/ibm/icu/ICUConfig.properties\\E"

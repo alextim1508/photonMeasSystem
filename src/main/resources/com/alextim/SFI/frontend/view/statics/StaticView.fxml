@@ -22,7 +22,7 @@
       <HBox layoutX="29.0" layoutY="121.0" spacing="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="121.0" />
       <HBox layoutX="20.0" layoutY="208.0" prefHeight="37.0" prefWidth="696.0" spacing="10.0" style="-fx-border-color: black;" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="208.0">
          <children>
-            <Label layoutX="10.0" layoutY="104.0" prefHeight="25.0" prefWidth="298.0" text="Текущее измерение (высота / PacketId / частоты): " />
+            <Label layoutX="10.0" layoutY="104.0" prefHeight="25.0" prefWidth="298.0" text="Текущее измерение (высота / packetId / частоты): " />
             <TextField fx:id="currentMeas" editable="false" layoutX="153.0" layoutY="100.0" prefHeight="25.0" prefWidth="413.0" />
          </children>
          <padding>

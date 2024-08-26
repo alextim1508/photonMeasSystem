@@ -92,7 +92,7 @@ public class StaticController extends NodeController {
 
         tableInitialize();
 
-        readStaticParamFromFile();
+        /*readStaticParamFromFile();*/
     }
 
     @Override
@@ -213,6 +213,7 @@ public class StaticController extends NodeController {
             return tableRow;
         };
         table.setRowFactory(callback);
+        table.setPlaceholder(new Label(""));
         table.setItems(FXCollections.observableArrayList());
     }
 
@@ -422,17 +423,18 @@ public class StaticController extends NodeController {
 
     private void initStaticParamByMeasResultMax() {
         table.getItems().forEach(item -> {
-            if(!item.isBackground) {
-                if(staticParam.prm1ch1Max > item.frequency1)
-                    staticParam.prm1ch1Max = (long) item.frequency1;
-                if(staticParam.prm1ch2Max > item.frequency2)
-                    staticParam.prm1ch2Max = (long) item.frequency2;
-                if(staticParam.prm2ch1Max > item.frequency3)
-                    staticParam.prm2ch1Max = (long) item.frequency3;
-                if(staticParam.prm2ch2Max > item.frequency4)
-                    staticParam.prm2ch2Max = (long) item.frequency4;
+            if (!item.isBackground) {
+                staticParam.prm1ch1Max = Math.max(staticParam.prm1ch1Max, (long) item.frequency1);
+                staticParam.prm1ch2Max = Math.max(staticParam.prm1ch2Max, (long) item.frequency2);
+                staticParam.prm2ch1Max = Math.max(staticParam.prm2ch1Max, (long) item.frequency3);
+                staticParam.prm2ch2Max = Math.max(staticParam.prm2ch2Max, (long) item.frequency4);
             }
         });
+
+        staticParam.prm1ch1Max += 1_000;
+        staticParam.prm1ch2Max += 1_000;
+        staticParam.prm2ch1Max += 1_000;
+        staticParam.prm2ch2Max += 1_000;
     }
 
     private void exportMeasurements() {
@@ -442,14 +444,21 @@ public class StaticController extends NodeController {
 
         initStaticParamByMeasResultMax();
 
-        staticParam = mainWindow.showStaticParamDialog(staticParam);
+        StaticParam staticParam = mainWindow.showStaticParamDialog(this.staticParam);
+        if (staticParam == null) {
+            return;
+        }
 
-        saveStaticParamToFile();
+        this.staticParam = staticParam;
+
+        /*saveStaticParamToFile();*/
 
         File file = mainWindow.showFileChooseDialog();
-        if (file == null)
+        if (file == null) {
             return;
+        }
 
+        System.out.println("________staticParam = " + staticParam);
         DoubleProperty progressProperty = new SimpleDoubleProperty(0.0);
         StringProperty statusProperty = new SimpleStringProperty("");
 
@@ -459,7 +468,7 @@ public class StaticController extends NodeController {
             log.info("export to selected file {}", file);
 
             rootController.getExportService().exportToFile(measResults,
-                    staticParam,
+                    this.staticParam,
                     serialNumber.getText(),
                     machineNumber.getText(),
                     file,
