@@ -112,4 +112,5 @@ public class PhotonMeasSystemService {
         mkoService.transfer(mkoMessage, setting, data -> {
         }, new AtomicBoolean(false), 1);
     }
+
 }

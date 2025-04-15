@@ -116,28 +116,30 @@ public class ExportService {
 
         Iterator<StatMeasResult> iterator = result.iterator();
 
-        int i;
-        for (i = 0; iterator.hasNext(); i++) {
+        int rowCounter = 0;
+
+        for (int i = 0; iterator.hasNext(); i++) {
             progress.accept(i + 1, 1.0 * (i + 1) / result.size());
 
             StatMeasResult next = iterator.next();
 
             if (!next.isBackground) {
-                fileWriter.append("//-------------").append(String.valueOf(next.refHeight)).append("-mm------------------").append(System.lineSeparator());
-                fileWriter.append("#define HP_").append(String.valueOf(i)).append("\t").append(String.valueOf(10 * next.refHeight)).append(System.lineSeparator());
-                fileWriter.append("#define HP_").append(String.valueOf(i)).append("_F1\t").append(String.valueOf((long) next.frequency1)).append(System.lineSeparator());
-                fileWriter.append("#define HP_").append(String.valueOf(i)).append("_F2\t").append(String.valueOf((long) next.frequency2)).append(System.lineSeparator());
-                fileWriter.append("#define HP_").append(String.valueOf(i)).append("_F3\t").append(String.valueOf((long) next.frequency3)).append(System.lineSeparator());
-                fileWriter.append("#define HP_").append(String.valueOf(i)).append("_F4\t").append(String.valueOf((long) next.frequency4)).append(System.lineSeparator());
+                fileWriter.append("//-------------").append(String.valueOf(10 * next.refHeight)).append("-mm------------------").append(System.lineSeparator());
+                fileWriter.append("#define HP_").append(String.valueOf(rowCounter)).append("\t").append(String.valueOf(10 * next.refHeight)).append(System.lineSeparator());
+                fileWriter.append("#define HP_").append(String.valueOf(rowCounter)).append("_F1\t").append(String.valueOf((long) next.frequency1)).append(System.lineSeparator());
+                fileWriter.append("#define HP_").append(String.valueOf(rowCounter)).append("_F2\t").append(String.valueOf((long) next.frequency2)).append(System.lineSeparator());
+                fileWriter.append("#define HP_").append(String.valueOf(rowCounter)).append("_F3\t").append(String.valueOf((long) next.frequency3)).append(System.lineSeparator());
+                fileWriter.append("#define HP_").append(String.valueOf(rowCounter)).append("_F4\t").append(String.valueOf((long) next.frequency4)).append(System.lineSeparator());
+                rowCounter++;
             }
         }
 
         fileWriter.append("//-------------End-mark------------------").append(System.lineSeparator());
-        fileWriter.append("#define HP_").append(String.valueOf(i)).append("\t").append("000").append(System.lineSeparator());
-        fileWriter.append("#define HP_").append(String.valueOf(i)).append("_F1\t").append("0").append(System.lineSeparator());
-        fileWriter.append("#define HP_").append(String.valueOf(i)).append("_F2\t").append("0").append(System.lineSeparator());
-        fileWriter.append("#define HP_").append(String.valueOf(i)).append("_F3\t").append("0").append(System.lineSeparator());
-        fileWriter.append("#define HP_").append(String.valueOf(i)).append("_F4\t").append("0").append(System.lineSeparator());
+        fileWriter.append("#define HP_").append(String.valueOf(rowCounter)).append("\t").append("000").append(System.lineSeparator());
+        fileWriter.append("#define HP_").append(String.valueOf(rowCounter)).append("_F1\t").append("0").append(System.lineSeparator());
+        fileWriter.append("#define HP_").append(String.valueOf(rowCounter)).append("_F2\t").append("0").append(System.lineSeparator());
+        fileWriter.append("#define HP_").append(String.valueOf(rowCounter)).append("_F3\t").append("0").append(System.lineSeparator());
+        fileWriter.append("#define HP_").append(String.valueOf(rowCounter)).append("_F4\t").append("0").append(System.lineSeparator());
 
 
         fileWriter.flush();

@@ -22,6 +22,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.alextim.SFI.service.Converter.convert;
 import static com.alextim.SFI.service.PhotonMeasSystemService.TechnologyCommands.CLOSE_TRANSMITTER;
@@ -172,6 +173,8 @@ public class ManagementController extends NodeController {
             }
         });
 
+        AtomicInteger attempt = new AtomicInteger(0);
+
         Runnable task = new Runnable() {
             @Override
             public void run() {
@@ -193,7 +196,16 @@ public class ManagementController extends NodeController {
 
                         log.info("========== startOn === OK ==========");
                     } else {
-                        futureTask = rootController.getScheduledExecutorService().schedule(this, 1, SECONDS);
+                        if(attempt.getAndIncrement() < 10) {
+                            futureTask = rootController.getScheduledExecutorService().schedule(this, 1, SECONDS);
+                        } else {
+                            Platform.runLater(() -> mainWindow.showDialog(Alert.AlertType.INFORMATION,
+                                    "Информация от передатчка СФИ",
+                                    "Команда открыть передатчк",
+                                    "Команда не выполнена"));
+
+                            log.info("========== startOn === !OK ==========");
+                        }
                     }
                 } catch (Exception e) {
                     log.error("", e);
@@ -232,6 +244,8 @@ public class ManagementController extends NodeController {
             }
         });
 
+        AtomicInteger attempt = new AtomicInteger(0);
+
         Runnable task = new Runnable() {
             @Override
             public void run() {
@@ -253,7 +267,16 @@ public class ManagementController extends NodeController {
 
                         log.info("========== startOn === OK ==========");
                     } else {
-                        futureTask = rootController.getScheduledExecutorService().schedule(this, 1, SECONDS);
+                        if(attempt.getAndIncrement() < 10) {
+                            futureTask = rootController.getScheduledExecutorService().schedule(this, 1, SECONDS);
+                        } else {
+                            Platform.runLater(() -> mainWindow.showDialog(Alert.AlertType.INFORMATION,
+                                    "Информация от передатчка СФИ",
+                                    "Команда закрыть передатчк",
+                                    "Команда не выполнена"));
+
+                            log.info("========== startOn === !OK ==========");
+                        }
                     }
                 } catch (Exception e) {
                     log.error("", e);

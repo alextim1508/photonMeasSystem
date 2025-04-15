@@ -1,6 +1,7 @@
 package com.alextim.SFI.transfer;
 
 import com.alextim.SFI.transfer.Handles.*;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import static com.alextim.SFI.transfer.BCCW.CHANNEL_A;
@@ -16,10 +17,10 @@ import static com.alextim.SFI.transfer.Mode.MODE_ENHANCED;
 DWORD is Double Word, each word is 2 bytes in length,
 DWORD double word is 4 bytes, each byte is 8 bits, a total of 32 bits.
 */
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class MMSPTransfer {
 
-    private final MMSPLibrary library;
+    private MMSPLibrary library;
 
     public Error startup() {
         int err = library.msp_Startup();
@@ -137,5 +138,6 @@ public class MMSPTransfer {
         int err = library.msp_DestroyHandle(frmHandle);
         return Error.getErrorByCode(err);
     }
+
 }
 

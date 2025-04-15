@@ -25,10 +25,13 @@ import static com.alextim.SFI.transfer.MFlag.BC_TO_RT;
 import static com.alextim.SFI.transfer.MFlag.RT_TO_BC;
 
 @Slf4j
-@RequiredArgsConstructor
 public class MkoService {
 
-    private final MMSPTransfer service;
+    private MMSPTransfer service;
+
+    public MkoService(MMSPTransfer service) {
+        this.service = service;
+    }
 
     @AllArgsConstructor
     public enum MKOBus {
@@ -55,10 +58,11 @@ public class MkoService {
         public final short[] data;
     }
 
-    private List<Object> trash = new ArrayList<>(); //bug JNA or my crooked hands
 
     public void transfer(MKOMessage message, Setting setting, Consumer<short[]> consumer, AtomicBoolean isStop, long amount) {
         log.info("Start transfer");
+
+        List<Object> trash = new ArrayList<>(); //bug JNA or my crooked hands
 
         DevHandle devHandle = null;
         Error err;
@@ -136,7 +140,6 @@ public class MkoService {
                 throw new RuntimeException("start " + err);
             }
 
-
             short[] data = new short[32];
             for (long i = 0; i < amount && !isStop.get(); i++) {
                 err = service.retrieveMessage(frameHandle, 0, formatMessage);
@@ -175,6 +178,11 @@ public class MkoService {
                 log.error("cleanup: {}", err);
             }
         }
+
+       /*
+       trash.clear();
+       System.gc();
+       */
 
         log.info("Transfer successfully");
     }

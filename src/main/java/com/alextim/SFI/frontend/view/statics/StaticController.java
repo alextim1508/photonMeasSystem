@@ -458,7 +458,6 @@ public class StaticController extends NodeController {
             return;
         }
 
-        System.out.println("________staticParam = " + staticParam);
         DoubleProperty progressProperty = new SimpleDoubleProperty(0.0);
         StringProperty statusProperty = new SimpleStringProperty("");
 

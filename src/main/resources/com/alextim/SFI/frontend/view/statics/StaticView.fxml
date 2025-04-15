@@ -9,7 +9,7 @@
 
 <AnchorPane prefHeight="757.0" prefWidth="1058.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.alextim.SFI.frontend.view.statics.StaticController">
    <children>
-      <TableView fx:id="table" layoutX="29.0" layoutY="362.0" prefHeight="251.0" prefWidth="1029.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="370.0">
+      <TableView fx:id="table" layoutX="29.0" layoutY="362.0" prefHeight="251.0" prefWidth="1029.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="370.0">
         <columns>
             <TableColumn fx:id="refHeightColumn" prefWidth="100.0" text="Высота (См)" />
             <TableColumn fx:id="channel1Column" prefWidth="150.0" text="Канал 1 (Гц)" />
@@ -45,7 +45,7 @@
             </HBox>
          </children>
       </AnchorPane>
-      <Button layoutX="939.0" layoutY="639.0" mnemonicParsing="false" onAction="#exportOn" prefHeight="25.0" prefWidth="110.0" text="Экспорт..." />
+      <Button layoutX="939.0" layoutY="639.0" mnemonicParsing="false" onAction="#exportOn" prefHeight="25.0" prefWidth="110.0" text="Экспорт..." AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="939.0" />
       <HBox layoutX="14.0" layoutY="71.0" spacing="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="70.0" />
       <AnchorPane layoutX="477.0" layoutY="48.0" prefHeight="161.0" prefWidth="347.0" style="-fx-border-color: black;" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
          <children>

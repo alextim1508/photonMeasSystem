@@ -7,6 +7,8 @@ import com.alextim.SFI.service.ExportService;
 import com.alextim.SFI.service.PhotonMeasSystemService;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.concurrent.TimeUnit;
+
 
 @Slf4j
 public class RootController extends RootControllerInitializer {
@@ -22,10 +24,25 @@ public class RootController extends RootControllerInitializer {
 
         ((DynamicController) getChild(DynamicController.class.getSimpleName())).stop();
         executorService.shutdown();
-        log.info("DynamicController deinitialize OK");
+        try {
+            if (!executorService.awaitTermination(1, TimeUnit.SECONDS)) {
+                executorService.shutdownNow();
+            }
+        } catch (InterruptedException ex) {
+            executorService.shutdownNow();
+        }
+        log.info("executorService shutdown OK");
 
         scheduledExecutorService.shutdown();
-        log.info("StaticController deinitialize OK");
+        try {
+            if (!scheduledExecutorService.awaitTermination(1, TimeUnit.SECONDS)) {
+                scheduledExecutorService.shutdownNow();
+            }
+        } catch (InterruptedException ex) {
+            scheduledExecutorService.shutdownNow();
+        }
+        log.info("scheduledExecutorService shutdown OK");
+
 
         ((ParamController) getChild(ParamController.class.getSimpleName())).writeSettingsToFile();
         log.info("Setting write to file OK");

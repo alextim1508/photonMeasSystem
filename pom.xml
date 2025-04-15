@@ -139,6 +139,7 @@
                         <arg>management_ext.lib</arg>
                         <arg>psapi.lib</arg>
                     </linkerArgs>
+                    <nativeImageArgs>--gc=epsilon</nativeImageArgs>
                 </configuration>
             </plugin>
         </plugins>
