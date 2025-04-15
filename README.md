@@ -1,2 +1,6 @@
 # photon meas system
-RTC
+
+Desktop приложение для управления космическим высотомером.
+
+![](screenshots/SFI.jpg)
+
